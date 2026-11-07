@@ -61,7 +61,10 @@ co = np.array([v.co[:] for v in head.data.vertices], dtype=np.float64)
 log['head_raw'] = {'n':len(co), 'min':co.min(0).tolist(), 'max':co.max(0).tolist()}
 
 # rotate +90 about Z (front -Y -> +X), scale s_head_raw
-def RotZ90(p): return np.stack([-p[:,1], p[:,0], p[:,2]],1)
+HEAD_ROT = math.radians(float(os.environ.get('HEAD_ROT_DEG','90')))
+def RotZ90(p):
+    c,sn=math.cos(HEAD_ROT),math.sin(HEAD_ROT)
+    return np.stack([p[:,0]*c-p[:,1]*sn, p[:,0]*sn+p[:,1]*c, p[:,2]],1)
 c2 = RotZ90(co)*s_head_raw
 # neck centre (pre-scale band z in [-0.34,-0.30] raw, central |x|<0.2)
 band = (co[:,2]>-0.34)&(co[:,2]<-0.30)&(np.abs(co[:,0])<0.2)&(np.abs(co[:,1])<0.3)
@@ -72,7 +75,7 @@ tx, ty = -nc[0], -nc[1]
 tz = target_top - top_post
 log['head_place'] = {'neck_center_post':nc.tolist(),'top_post':float(top_post),'target_top_raw':target_top,
                      'shift':[tx,ty,tz], 'band_n':int(band.sum())}
-M_head = Matrix.Translation((tx,ty,tz)) @ Matrix.Diagonal((s_head_raw,s_head_raw,s_head_raw,1)) @ Matrix.Rotation(math.radians(90),4,'Z')
+M_head = Matrix.Translation((tx,ty,tz)) @ Matrix.Diagonal((s_head_raw,s_head_raw,s_head_raw,1)) @ Matrix.Rotation(HEAD_ROT,4,'Z')
 head.data.transform(M_head)
 head.matrix_world = Matrix.Identity(4)
 
@@ -99,6 +102,19 @@ mx = (max(b[1][0] for b in allb),max(b[1][1] for b in allb),max(b[1][2] for b in
 log['final_bbox'] = {'min':mn,'max':mx,'height':mx[2]-mn[2]}
 log['objects'] = {o.name: {'V':len(o.data.vertices),'tris':sum(len(p.vertices)-2 for p in o.data.polygons),
                           'bbox_min':[round(x,4) for x in raw_bbox(o)[0]],'bbox_max':[round(x,4) for x in raw_bbox(o)[1]]} for o in mesh_objs()}
+# ---- align neck to shirt collar opening (final coords)
+def _arr(o): return np.array([v.co[:] for v in o.data.vertices],dtype=np.float64)
+_h = head.data; _hv = np.array([v.co[:] for v in _h.vertices],dtype=np.float64)
+_sv = _arr(parts['model_part9'])
+_sv = np.array([ (T_all @ Vector(v))[:] for v in _sv ]) if False else None
+_s_obj = bpy.data.objects['model_part9']; _sf = np.array([v.co[:] for v in _s_obj.data.vertices],dtype=np.float64)
+mS = (_sf[:,2]>0.68)&(_sf[:,2]<0.71)
+shirt_c = np.median(_sf[mS,:2],axis=0)
+mH = (_hv[:,2]>0.695)&(_hv[:,2]<0.715)
+neck_c = np.median(_hv[mH,:2],axis=0)
+dxy = shirt_c - neck_c
+head.data.transform(Matrix.Translation((float(dxy[0]),float(dxy[1]),0.0)))
+log['neck_align'] = {'shirt_collar_center':shirt_c.tolist(),'neck_center_before':neck_c.tolist(),'shift':dxy.tolist()}
 bpy.ops.wm.save_as_mainfile(filepath=OUT, compress=True)
 json.dump(log, open(LOG,'w'), indent=1, default=float)
 print("STAGE_AB_DONE", OUT)
