@@ -46,3 +46,8 @@ stage_AB.py (환경변수 HEAD_BLEND, OUT_BLEND, LOG_JSON), render_views.py 로 
 - 좌우 대칭 검사: 얼굴 방향 약 +2도 (정면 +X 와 맞음).
 - 차이 (model unit): 턱 앞끝 +0.0191 (원래 +0.0227, 차이 -0.0036), 목 뒤끝 -0.1270 (원래 -0.1295, +0.0025), 뒤통수 -0.1149 (원래 -0.1156, +0.0007), 정수리 0.8870 (원래 0.9038, -0.0168).
 - 산출물: Neru_n2_headswap_v5.blend (git 제외), images/n2_v5_neck_head_4sides.png, v4/icp_M_v5.npy, v4/icp_v5.py
+
+## 목 수정 v6 (2026-11-07, 확인 대기)
+- v5 기준, 목 중심 x +0.0059, 머리 앞으로 12도 기울임, 목 두께 8% 감소, 뒤쪽 셔츠 깃 당기고 세움. 자세한 값은 REPORT_n2_v6_neck_KO.md.
+- 한계: 머리 최고점 0.859 (기울인 결과), 목 이음매 숨기기와 잘린 끝 막기는 안 함.
+- 파일: Neru_n2_headswap_v6.blend (git 제외), v4/neck_v6.py, v4/overlay_v6.py, v4/stage_v6_log.json
