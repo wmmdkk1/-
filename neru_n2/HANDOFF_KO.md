@@ -51,3 +51,8 @@ stage_AB.py (환경변수 HEAD_BLEND, OUT_BLEND, LOG_JSON), render_views.py 로 
 - v5 기준, 목 중심 x +0.0059, 머리 앞으로 12도 기울임, 목 두께 8% 감소, 뒤쪽 셔츠 깃 당기고 세움. 자세한 값은 REPORT_n2_v6_neck_KO.md.
 - 한계: 머리 최고점 0.859 (기울인 결과), 목 이음매 숨기기와 잘린 끝 막기는 안 함.
 - 파일: Neru_n2_headswap_v6.blend (git 제외), v4/neck_v6.py, v4/overlay_v6.py, v4/stage_v6_log.json
+
+## 목 v7 시도 (2026-11-07, 미완료)
+- 어깨·셔츠 깃 최근접 맞춤: 회전 10도 한계, 크기 0.57~1.18 로 흔들림. 기준으로 쓸 수 없음.
+- v7 블렌드와 크기 3종은 만들지 않음. 다음: 랜드마크 3~4점 맞춤 제안 (REPORT_n2_v7_shoulder_KO.md).
+- 스크립트: v7/extract_p9.py, v7/shoulder_match_v7.py, v7/shoulder_match_v7b.py
