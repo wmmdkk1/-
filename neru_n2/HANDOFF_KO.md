@@ -28,3 +28,8 @@ stage_AB.py (환경변수 HEAD_BLEND, OUT_BLEND, LOG_JSON), render_views.py 로 
 - 결과: 정면(+X 카메라)에서 얼굴이 정면을 봄. 목이 깃 가운데에 들어감 (목 중심 X -0.0329 / Y -0.0032, 깃 중심 X -0.0326 / Y -0.0030).
 - 남은 문제: 앞머리가 눈을 가림 → 단계 D 대상.
 - 산출물: neru_n2/Neru_n2_headswap_v3.blend (git 제외), images/n2_v3_head_check_grey.png, stageAB_v3_log.json
+
+## 단계 B v4 (2026-11-07, 확인 대기)
+- 방법: 원래 머리 part2 와 새 머리 표면을 ICP (균일 크기 0.897 + 회전 + 이동). 목 단면 중심선 측정은 불안정해서 사용 안 함.
+- 결과: 턱 앞 차이 0.0091 (목표 0.003 미달), 뒤통수·목 뒤 0.002 이내, 정수리 -0.020 (낮음).
+- 산출물: Neru_n2_headswap_v4.blend (git 제외), REPORT_n2_v4_KO.md, images/n2_v4_*.png, v4/ (스크립트, ICP 행렬, 로그)
