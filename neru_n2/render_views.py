@@ -13,11 +13,11 @@ scene.view_settings.view_transform = 'Standard'
 scene.world = scene.world or bpy.data.worlds.new('W')
 scene.world.use_nodes = True
 bg = scene.world.node_tree.nodes.get('Background')
-if bg: bg.inputs[0].default_value = (1,1,1,1); bg.inputs[1].default_value = 1.0
+if bg: bg.inputs[0].default_value = (0.42,0.42,0.42,1); bg.inputs[1].default_value = 1.0
 mesh_objs = [o for o in bpy.context.scene.objects if o.type == 'MESH' and not o.hide_render]
 mat = bpy.data.materials.new('preview_grey'); mat.use_nodes = True
 bsdf = mat.node_tree.nodes.get('Principled BSDF')
-bsdf.inputs['Base Color'].default_value = (0.78,0.78,0.80,1)
+bsdf.inputs['Base Color'].default_value = (0.80,0.80,0.82,1)
 bsdf.inputs['Roughness'].default_value = 0.6
 for o in mesh_objs:
     o.data.materials.clear(); o.data.materials.append(mat)
@@ -43,10 +43,10 @@ dirs = {
 # semantic: front = +X facing (after orientation) ; we use raw dirs given explicitly
 cam_data = bpy.data.cameras.new('cam'); cam_data.type='ORTHO'; cam_data.ortho_scale = size*1.15
 cam = bpy.data.objects.new('cam', cam_data); scene.collection.objects.link(cam); scene.camera = cam
-sun_data = bpy.data.lights.new('sun', 'SUN'); sun_data.energy = 3.0
+sun_data = bpy.data.lights.new('sun', 'SUN'); sun_data.energy = 4.5
 sun = bpy.data.objects.new('sun', sun_data); scene.collection.objects.link(sun)
-sun.rotation_euler = (math.radians(45), 0, math.radians(30))
-amb = bpy.data.lights.new('amb','SUN'); amb.energy = 1.2
+sun.rotation_euler = (math.radians(35), 0, math.radians(-110))
+amb = bpy.data.lights.new('amb','SUN'); amb.energy = 0.15
 ambo = bpy.data.objects.new('amb', amb); scene.collection.objects.link(ambo); ambo.rotation_euler=(math.radians(-30),0,math.radians(-150))
 for name in views:
     # project convention: character front = +X, left = +Y, up = +Z
